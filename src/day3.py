@@ -2,10 +2,10 @@ import math
 
 
 def main(source):
-    sourceFile = open(source, 'r')
-    lines = sourceFile.readlines()
+    with open(source) as r:
+        lines = r.readlines()
+        
     s = [x.rstrip('\n') for x in lines]
-
     result1 = part1(s)
     print(result1)
 
