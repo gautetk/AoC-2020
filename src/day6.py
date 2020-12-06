@@ -1,6 +1,3 @@
-import collections
-from typing import Counter
-
 
 def main(source):
     with open(source) as r:
@@ -20,14 +17,13 @@ def parseInput(s):
 
 
 def part1(customStrings):
-    groups = [g.replace('\n','') for g in customStrings]
-
+    groups = [g.replace('\n', '') for g in customStrings]
     return sum([len(set(g)) for g in groups])
 
-def countUnique(g):
-    counter = collections.Counter(g)
-    group = set(g.replace('\n',''))
-    return sum([1 for i in group if counter[i] == counter['\n']+1])
+
+def countUnique(group):
+    answers = [set(x) for x in group.split('\n')]
+    return len(set.intersection(*answers))
 
 
 def part2(customStrings):
