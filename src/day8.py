@@ -41,24 +41,13 @@ def part1(instructions):
     return acc
 
 
-def changeInstruction(i, instructions):
-    operation, argument = instructions[i]
-    if operation == 'acc':
-        return False
-    elif operation == 'jmp':
-        return instructions[:i] + [['nop', argument]] + instructions[i+1:]
-    elif operation == 'nop':
-        return instructions[:i] + [['jmp', argument]] + instructions[i+1:]
-
-
 def part2(instructions):
-    changeLine = 0
-    for i in range(len(instructions)):
-        newInstructions = changeInstruction(i, instructions)
-        if newInstructions:
-            acc, success = runProgram(newInstructions)
-            if success:
-                return acc
+    changes = {'nop': 'jmp', 'jmp': 'nop'}
+    for iChange, change in [(i, changes[item[0]]) for i, item in enumerate(instructions) if item[0] in changes]:
+        instructions_new = instructions[:iChange] + [[change, instructions[iChange][1]]] + instructions[iChange+1:]
+        acc, success = runProgram(instructions_new)
+        if success:
+            return acc
 
 
 if __name__ == '__main__':
