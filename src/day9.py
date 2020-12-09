@@ -24,8 +24,7 @@ def possibleSums(pre):
 def part1(inp, lPre):
     pre = inp[:lPre]
     for i, v in enumerate(inp[lPre:]):
-        pre = inp[i:lPre+i]
-        if v not in possibleSums(pre):
+        if v not in possibleSums(inp[i:lPre+i]):
             return v
 
 
