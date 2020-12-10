@@ -15,16 +15,8 @@ def main(source):
 
 def part1(inp):
     inp.sort()
-    diff = [j-i for i, j in zip(inp[:-1], inp[1:])]
+    diff = [j-i for i, j in zip(inp, inp[1:])]
     return diff.count(1) * diff.count(3)
-
-
-def checkNumber(lines, result1):
-    conNr = lines[0:1]
-    for v in lines[1:]:
-        conNr.append(v)
-        if sum(conNr) == result1:
-            return conNr
 
 
 def part2(inp):
@@ -34,8 +26,8 @@ def part2(inp):
     size = len(diff)
     idx_list = [idx + 1 for idx, val in enumerate(diff) if val == 3]
     res = [len(diff[i: j-1]) for i, j in zip([0] + idx_list, idx_list + ([size] if idx_list[-1] != size else []))]
-    acc = 1
 
+    acc = 1
     asfd = {0: 1, 1: 1, 2: 2, 3: 4, 4: 7}
     for r in res:
         acc = acc * asfd[r]
