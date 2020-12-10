@@ -26,11 +26,8 @@ def part2(inp):
     # partition list into sublist, split on 3
     size = len(diff)
     idx_list = [idx + 1 for idx, val in enumerate(diff) if val == 3]
-    # train wreck ahead!
-    res = [len(diff[i: j-1]) for i, j in zip(
-        [0] + idx_list, 
-        idx_list + ([size] 
-        if idx_list[-1] != size else []))]
+    zipIndex = zip([0] + idx_list, idx_list + ([size] if idx_list[-1] != size else []))
+    res = [len(diff[i: j-1]) for i, j in zipIndex]
 
     acc = 1
     asfd = {0: 1, 1: 1, 2: 2, 3: 4, 4: 7}
