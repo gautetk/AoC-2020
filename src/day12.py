@@ -15,6 +15,10 @@ def main(source):
         'W': (-1, 0, 0),
         'R': (0, 0, -1),
         'L': (0, 0, 1),
+        0: (1, 0, 0),
+        90: (0, 1, 0),
+        180: (-1, 0, 0),
+        270: (0, -1, 0),
     }
 
     result1 = part1(inp, instructions)
@@ -24,32 +28,13 @@ def main(source):
     print(result2)
 
 
-
-
-
-def moveRotate(instruct, v):
-    return [i * v for i in instruct]
-
-
-def forward(head, instructions):
-    h = head % 360
-    if h == 0:
-        return instructions['E']
-    elif h == 90:
-        return instructions['N']
-    elif h == 180:
-        return instructions['W']
-    elif h == 270:
-        return instructions['S']
-
-
-def part1(inp,instructions):
+def part1(inp, instructions):
     x = 0
     y = 0
     head = 0
     for c in inp:
         if c[0] == 'F':
-            instruct = forward(head, instructions)
+            instruct = instructions[head % 360]
         else:
             instruct = instructions[c[0]]
 
@@ -72,11 +57,15 @@ def part2(inp, instructions):
         else:
             instruct = instructions[c[0]]
             xW, yW = rotateWP(xW, yW, instruct[-1], c[1])
-            dx, dy = moveRotate(instruct[:-1], c[1]) 
+            dx, dy = moveRotate(instruct[:-1], c[1])
             xW += dx
             yW += dy
 
     return abs(x)+abs(y)
+
+
+def moveRotate(instruct, v):
+    return [i * v for i in instruct]
 
 
 def rotateWP(xW, yW, dir, rot):
