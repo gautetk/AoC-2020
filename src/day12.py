@@ -8,67 +8,59 @@ def main(source):
     inp = [x.rstrip('\n') for x in lines]
     inp = [(x[0], int(x[1:])) for x in inp]
 
-    result1 = part1(inp)
+    instructions = {
+        'N': (0, 1, 0),
+        'S': (0, -1, 0),
+        'E': (1, 0, 0),
+        'W': (-1, 0, 0),
+        'R': (0, 0, -1),
+        'L': (0, 0, 1),
+    }
+
+    result1 = part1(inp, instructions)
     print(result1)
 
-    result2 = part2(inp)
+    result2 = part2(inp, instructions)
     print(result2)
 
 
-instructions = {
-    'N': (0, 1, 0),
-    'S': (0, -1, 0),
-    'E': (1, 0, 0),
-    'W': (-1, 0, 0),
-    'R': (0, 0, -1),
-    'L': (0, 0, 1),
-}
+
 
 
 def moveRotate(instruct, v):
     return [i * v for i in instruct]
 
 
-def forward(head, v):
+def forward(head, instructions):
     h = head % 360
     if h == 0:
-        instruct = instructions['E']
+        return instructions['E']
     elif h == 90:
-        instruct = instructions['N']
+        return instructions['N']
     elif h == 180:
-        instruct = instructions['W']
+        return instructions['W']
     elif h == 270:
-        instruct = instructions['S']
-    return moveRotate(instruct, v)
+        return instructions['S']
 
 
-def part1(inp):
+def part1(inp,instructions):
     x = 0
     y = 0
     head = 0
     for c in inp:
         if c[0] == 'F':
-            dx, dy, dHead = forward(head, c[1])
+            instruct = forward(head, instructions)
         else:
-            dx, dy, dHead = moveRotate(instructions[c[0]], c[1])
+            instruct = instructions[c[0]]
+
+        dx, dy, dHead = moveRotate(instruct, c[1])
         x += dx
         y += dy
         head += dHead
     return abs(x)+abs(y)
 
 
-def moveWP(instruct, v):
-    return instruct[0]*v, instruct[1]*v
-
-
-def rotateWP(xW, yW, rot):
-    r = math.radians(rot % 360)
-    dx = int(round(xW*math.cos(r)-yW*math.sin(r)))
-    dy = int(round(xW*math.sin(r)+yW*math.cos(r)))
-    return dx, dy
-
-
-def part2(inp):
+def part2(inp, instructions):
     x = 0
     y = 0
     xW = 10
@@ -78,16 +70,20 @@ def part2(inp):
             x += xW * c[1]
             y += yW * c[1]
         else:
-            if c[0] == 'L':
-                xW, yW = rotateWP(xW, yW, c[1])
-            elif c[0] == 'R':
-                xW, yW = rotateWP(xW, yW, -c[1])
-            else:
-                dx, dy = moveWP(instructions[c[0]], c[1])
-                xW += dx
-                yW += dy
+            instruct = instructions[c[0]]
+            xW, yW = rotateWP(xW, yW, instruct[-1], c[1])
+            dx, dy = moveRotate(instruct[:-1], c[1]) 
+            xW += dx
+            yW += dy
 
     return abs(x)+abs(y)
+
+
+def rotateWP(xW, yW, dir, rot):
+    r = math.radians(dir*rot % 360)
+    dx = int(round(xW*math.cos(r)-yW*math.sin(r)))
+    dy = int(round(xW*math.sin(r)+yW*math.cos(r)))
+    return dx, dy
 
 
 if __name__ == '__main__':
